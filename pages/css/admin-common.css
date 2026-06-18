@@ -1,0 +1,364 @@
+/* ============================================================
+   common.css — Shared base styles for Bharat Electronics
+   Used by: index.html, dashboard.html
+   ============================================================ */
+
+/* ── COMPONENT: CSS Variables (Brand Tokens)
+   To restyle the entire project, change values here only.
+   ---------------------------------------------------------- */
+:root {
+  --color-bg:          #0a0a0a;
+  --color-surface:     #111111;
+  --color-surface-2:   #1a1a1a;
+  --color-surface-3:   #222222;
+  --color-border:      #2a2a2a;
+  --color-border-light:#333333;
+
+  --color-gold:        #c9a84c;
+  --color-gold-dim:    #8a6f2e;
+  --color-gold-light:  #e8c87a;
+
+  --color-text-primary:   #f0f0f0;
+  --color-text-secondary: #888888;
+  --color-text-muted:     #555555;
+
+  --color-success:     #4caf7d;
+  --color-danger:      #e05555;
+  --color-warning:     #e09a3a;
+  --color-info:        #4a9edd;
+
+  --font-main:   'Outfit', sans-serif;
+  --font-brand:  'Cormorant Garamond', serif;
+
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   16px;
+  --radius-xl:   24px;
+
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.4);
+  --shadow-md:  0 4px 16px rgba(0,0,0,0.5);
+  --shadow-lg:  0 8px 32px rgba(0,0,0,0.6);
+
+  --transition: 0.2s ease;
+}
+
+/* ── COMPONENT: Reset & Base
+   ---------------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-main);
+  background: var(--color-bg);
+  color: var(--color-text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── COMPONENT: Scrollbar (Dark Theme)
+   ---------------------------------------------------------- */
+::-webkit-scrollbar        { width: 6px; height: 6px; }
+::-webkit-scrollbar-track  { background: var(--color-surface); }
+::-webkit-scrollbar-thumb  { background: var(--color-border-light); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-text-muted); }
+
+/* ── COMPONENT: Typography Utilities
+   ---------------------------------------------------------- */
+.text-primary   { color: var(--color-text-primary); }
+.text-secondary { color: var(--color-text-secondary); }
+.text-muted     { color: var(--color-text-muted); }
+.text-gold      { color: var(--color-gold); }
+.text-success   { color: var(--color-success); }
+.text-danger    { color: var(--color-danger); }
+.text-warning   { color: var(--color-warning); }
+
+/* ── COMPONENT: Shared Button Base
+   To change button style globally, edit here.
+   ---------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  border: none;
+  font-family: var(--font-main);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.btn:active { transform: scale(0.97); }
+
+.btn-gold {
+  background: var(--color-gold);
+  color: #0a0a0a;
+}
+.btn-gold:hover { background: var(--color-gold-light); }
+
+.btn-outline {
+  background: transparent;
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-light);
+}
+.btn-outline:hover {
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+}
+
+.btn-ghost {
+  background: var(--color-surface-2);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+}
+.btn-ghost:hover {
+  background: var(--color-surface-3);
+  color: var(--color-text-primary);
+}
+
+.btn-danger {
+  background: transparent;
+  color: var(--color-danger);
+  border: 1px solid var(--color-danger);
+}
+.btn-danger:hover { background: rgba(224, 85, 85, 0.1); }
+
+/* ── COMPONENT: Badge / Status Pill
+   ---------------------------------------------------------- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+}
+
+.badge-success { background: rgba(76, 175, 125, 0.15); color: var(--color-success); }
+.badge-danger  { background: rgba(224, 85, 85, 0.15);  color: var(--color-danger); }
+.badge-warning { background: rgba(224, 154, 58, 0.15); color: var(--color-warning); }
+.badge-info    { background: rgba(74, 158, 221, 0.15); color: var(--color-info); }
+.badge-gold    { background: rgba(201, 168, 76, 0.15); color: var(--color-gold); }
+
+/* ── COMPONENT: Divider
+   ---------------------------------------------------------- */
+.divider {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 1.5rem 0;
+}
+
+.divider-gold {
+  border: none;
+  border-top: 1px solid var(--color-gold-dim);
+  margin: 1rem auto;
+  width: 60px;
+  opacity: 0.5;
+}
+
+/* ── COMPONENT: Fade-up Animation
+   Used by brand page sections. Can be disabled by removing
+   the .fade-up class on any element.
+   ---------------------------------------------------------- */
+.fade-up {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 0.5s ease forwards;
+}
+
+@keyframes fadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Stagger delays — add .d1 to .d8 on child elements */
+.d1 { animation-delay: 0.05s; }
+.d2 { animation-delay: 0.15s; }
+.d3 { animation-delay: 0.25s; }
+.d4 { animation-delay: 0.35s; }
+.d5 { animation-delay: 0.45s; }
+.d6 { animation-delay: 0.55s; }
+.d7 { animation-delay: 0.65s; }
+.d8 { animation-delay: 0.75s; }
+
+/* ── COMPONENT: Toast Notification
+   Shared across both pages.
+   ---------------------------------------------------------- */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.toast {
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  padding: 12px 18px;
+  font-size: 13px;
+  color: var(--color-text-primary);
+  box-shadow: var(--shadow-md);
+  animation: slideIn 0.3s ease;
+  max-width: 300px;
+}
+
+.toast.success { border-left: 3px solid var(--color-success); }
+.toast.error   { border-left: 3px solid var(--color-danger); }
+.toast.info    { border-left: 3px solid var(--color-info); }
+
+@keyframes slideIn {
+  from { transform: translateX(100px); opacity: 0; }
+  to   { transform: translateX(0);     opacity: 1; }
+}
+
+/* ── COMPONENT: Modal Overlay
+   Shared modal base — each page adds its own modal content.
+   ---------------------------------------------------------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition);
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  transform: scale(0.95);
+  transition: transform var(--transition);
+}
+
+.modal-overlay.active .modal {
+  transform: scale(1);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.modal-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+  transition: color var(--transition);
+}
+.modal-close:hover { color: var(--color-text-primary); }
+
+/* ── COMPONENT: Form Elements
+   Shared input/select/textarea styles.
+   ---------------------------------------------------------- */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.form-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-primary);
+  font-family: var(--font-main);
+  font-size: 14px;
+  padding: 10px 14px;
+  width: 100%;
+  transition: border-color var(--transition);
+  outline: none;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  border-color: var(--color-gold);
+}
+
+.form-textarea { resize: vertical; min-height: 80px; }
+.form-select   { cursor: pointer; }
+
+/* ── COMPONENT: Empty State
+   Shown when a list or table has no data.
+   ---------------------------------------------------------- */
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--color-text-muted);
+}
+
+.empty-state-icon {
+  font-size: 40px;
+  margin-bottom: 12px;
+  opacity: 0.4;
+}
+
+.empty-state-text {
+  font-size: 14px;
+}
+
+/* ── COMPONENT: Responsive Utilities
+   ---------------------------------------------------------- */
+@media (max-width: 768px) {
+  .hide-mobile { display: none !important; }
+}
+
+@media (min-width: 769px) {
+  .hide-desktop { display: none !important; }
+}

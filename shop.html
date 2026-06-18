@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!--
+    shop.html — Full Product Catalog
+    Reads ?category= and ?q= from URL (set by index.html links
+    and the shared search box) to pre-filter on load.
+  -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shop All Products — Bharat Electronics</title>
+  <link rel="stylesheet" href="css/common.css" />
+  <link rel="stylesheet" href="css/pages.css" />
+</head>
+<body>
+
+<div id="loader">
+  <div class="loader-stage">
+    <div class="loader-be" id="loaderBE">BE</div>
+    <div class="loader-full" id="loaderFull">Bharat <span class="accent">Electronics</span></div>
+  </div>
+  <div class="loader-progress-track" id="loaderProgressTrack">
+    <div class="loader-progress-fill" id="loaderProgressFill"></div>
+  </div>
+  <div class="loader-tag" id="loaderTag">PREMIUM · TRUSTED · GENUINE</div>
+</div>
+
+<div class="nav-top">
+  <div class="nav-top-left">
+    <span>📍 <span data-setting="address">Pukhrayan, Uttar Pradesh</span></span>
+    <span>🕐 Open · <span data-setting="open_time">10:00</span>–<span data-setting="close_time">20:00</span></span>
+  </div>
+  <div class="nav-top-right">
+    <a href="tel:" data-setting-href="phone">📞 <span data-setting="phone">+91 98765 43210</span></a>
+  </div>
+</div>
+
+<nav class="nav-main">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-mark">B</div>
+    <div class="nav-text" data-setting="shop_name">Bharat Electronics</div>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html" class="nav-link">Home</a></li>
+    <li><a href="shop.html" class="nav-link active">Shop</a></li>
+    <li><a href="repair.html" class="nav-link">Repair</a></li>
+    <li><a href="about.html" class="nav-link">About</a></li>
+    <li><a href="contact.html" class="nav-link">Contact</a></li>
+  </ul>
+  <button class="nav-hamburger" id="navHamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="search-row">
+  <div class="search-box">
+    🔍 <input type="text" id="siteSearch" placeholder="Search TV, AC, fridge, mobile...">
+  </div>
+</div>
+
+<div class="page-head">
+  <div class="page-eyebrow">Our Collection</div>
+  <div class="page-title">Shop All Products</div>
+</div>
+
+<!-- Category chips — built dynamically with live counts -->
+<div class="cat-strip" id="categoryStrip"></div>
+
+<div class="shop-controls">
+  <div class="shop-count" id="shopCount">Loading products…</div>
+  <select class="sort-select" id="sortSelect">
+    <option value="default">Sort: Featured</option>
+    <option value="price-low">Price: Low to High</option>
+    <option value="price-high">Price: High to Low</option>
+    <option value="name">Name: A to Z</option>
+  </select>
+</div>
+
+<div class="product-grid-shop" id="productGrid">
+  <div class="empty-state">
+    <div class="empty-state-icon">⏳</div>
+    <div class="empty-state-text">Loading products…</div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div data-setting="shop_name">Bharat Electronics</div>
+  <div class="footer-links">
+    <a href="shop.html">Shop</a>
+    <a href="repair.html">Repair</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</footer>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script src="js/loader.js"></script>
+<script src="js/main.js"></script>
+<script>
+  /* ── COMPONENT: Shop Page Logic
+     Loads full inventory once, then filters/sorts client-side
+     for instant response (no re-fetching on every interaction).
+     -------------------------------------------------------- */
+  const CATEGORY_ICONS = {
+    TV: '📺', AC: '❄️', Fridge: '🧊', Washing: '🫧',
+    Mobile: '📱', Appliances: '🍹', Accessories: '🔌',
+  };
+
+  let _allProducts   = [];
+  let _activeCategory = 'All';
+  let _activeSort      = 'default';
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    /* Read URL params set by links from index.html or the search box */
+    const params = new URLSearchParams(window.location.search);
+    _activeCategory = params.get('category') || 'All';
+    const searchQuery = params.get('q') || '';
+
+    const searchInput = document.getElementById('siteSearch');
+    if (searchQuery) searchInput.value = searchQuery;
+
+    try {
+      _allProducts = await API.inventory.getAll();
+      renderCategoryStrip();
+      renderProducts();
+    } catch (err) {
+      console.error('Failed to load inventory:', err);
+      document.getElementById('productGrid').innerHTML =
+        `<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">Could not load products. Please refresh.</div></div>`;
+    }
+
+    /* Live filtering as user types — overrides the "redirect to shop"
+       behavior from main.js since we're already on this page */
+    searchInput.addEventListener('input', renderProducts);
+
+    document.getElementById('sortSelect').addEventListener('change', (e) => {
+      _activeSort = e.target.value;
+      renderProducts();
+    });
+  });
+
+  function renderCategoryStrip() {
+    const strip = document.getElementById('categoryStrip');
+    const cats = [...new Set(_allProducts.map(p => p.category))];
+
+    const countFor = (cat) => cat === 'All'
+      ? _allProducts.length
+      : _allProducts.filter(p => p.category === cat).length;
+
+    const chips = ['All', ...cats];
+    strip.innerHTML = chips.map(c => `
+      <button class="cat-chip ${c === _activeCategory ? 'active' : ''}" data-cat="${c}">
+        ${c === 'All' ? '' : (CATEGORY_ICONS[c] || '📦') + ' '}${c} (${countFor(c)})
+      </button>
+    `).join('');
+
+    strip.querySelectorAll('.cat-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        _activeCategory = chip.dataset.cat;
+        strip.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        renderProducts();
+      });
+    });
+  }
+
+  function renderProducts() {
+    const grid  = document.getElementById('productGrid');
+    const count = document.getElementById('shopCount');
+    const query = document.getElementById('siteSearch').value.trim().toLowerCase();
+
+    let items = [..._allProducts];
+
+    if (_activeCategory !== 'All') {
+      items = items.filter(p => p.category === _activeCategory);
+    }
+    if (query) {
+      items = items.filter(p =>
+        p.name.toLowerCase().includes(query) ||
+        p.category.toLowerCase().includes(query)
+      );
+    }
+
+    switch (_activeSort) {
+      case 'price-low':  items.sort((a, b) => a.price - b.price); break;
+      case 'price-high': items.sort((a, b) => b.price - a.price); break;
+      case 'name':       items.sort((a, b) => a.name.localeCompare(b.name)); break;
+    }
+
+    count.textContent = `${items.length} product${items.length !== 1 ? 's' : ''}`;
+
+    if (!items.length) {
+      grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-state-icon">📦</div><div class="empty-state-text">No products match your search.</div></div>`;
+      return;
+    }
+
+    grid.innerHTML = items.map((p, i) => `
+      <div class="card fade-in d${(i % 6) + 1}" data-whatsapp-product="${p.name}">
+        <div class="card-img">${p.emoji || '📦'}</div>
+        <div class="card-body">
+          <div class="card-cat">${p.category}</div>
+          <div class="card-name">${p.name}</div>
+          <div class="card-price">₹${Number(p.price).toLocaleString('en-IN')}</div>
+          <div class="card-btn">WhatsApp enquiry</div>
+        </div>
+      </div>
+    `).join('');
+  }
+</script>
+
+</body>
+</html>

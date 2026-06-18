@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!--
+    dashboard.html — Admin Dashboard (Protected)
+    Redirects to login.html if no JWT token found.
+    All data fetched from Flask API.
+  -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Bharat Electronics</title>
+  <link rel="stylesheet" href="css/admin-common.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" defer></script>
+</head>
+<body>
+
+<div class="dashboard-layout">
+
+  <!-- ════════════════════════════════════════
+       SIDEBAR
+       ════════════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-mark">B</div>
+      <div>
+        <div class="sidebar-brand-text" id="sb-shop-name">Bharat Electronics</div>
+        <div class="sidebar-brand-sub">Admin Panel</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Main</div>
+      <div class="sidebar-item active" data-tab="overview">
+        <span class="sidebar-icon">📊</span>Overview
+      </div>
+      <div class="sidebar-item" data-tab="inventory">
+        <span class="sidebar-icon">📦</span>Inventory
+        <span class="sidebar-badge" id="low-stock-badge" style="display:none">0</span>
+      </div>
+      <div class="sidebar-item" data-tab="sales">
+        <span class="sidebar-icon">💰</span>Sales
+      </div>
+      <div class="sidebar-section-label">Config</div>
+      <div class="sidebar-item" data-tab="settings">
+        <span class="sidebar-icon">⚙️</span>Settings
+      </div>
+      <a class="sidebar-item" href="../index.html">
+        <span class="sidebar-icon">🌐</span>View Website
+      </a>
+      <div class="sidebar-item" onclick="handleLogout()" style="margin-top:auto;color:var(--color-danger)">
+        <span class="sidebar-icon">🚪</span>Logout
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-store-status">
+        <div class="status-dot open" id="store-dot"></div>
+        <span id="store-label">Store is Open</span>
+        <label class="toggle" style="margin-left:auto">
+          <input type="checkbox" id="store-toggle" checked>
+          <div class="toggle-slider"></div>
+        </label>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ════════════════════════════════════════
+       MAIN CONTENT
+       ════════════════════════════════════════ -->
+  <div class="main-content">
+
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="topbar-menu-btn" id="sidebar-toggle">☰</button>
+        <div>
+          <div class="topbar-title" id="topbar-title">Overview</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-date" id="topbar-date"></div>
+        <button class="btn btn-ghost" onclick="handleLogout()" style="font-size:12px;padding:6px 14px">
+          🚪 Logout
+        </button>
+      </div>
+    </header>
+
+    <div class="page-content">
+
+      <!-- Tab Bar -->
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="overview">📊 Overview</button>
+        <button class="tab-btn" data-tab="inventory">📦 Inventory</button>
+        <button class="tab-btn" data-tab="sales">💰 Sales</button>
+        <button class="tab-btn" data-tab="settings">⚙️ Settings</button>
+      </div>
+
+      <!-- ══════════════════════════════════════
+           TAB: OVERVIEW
+           ══════════════════════════════════════ -->
+      <div class="tab-panel active" id="tab-overview">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h2>Good day! 👋</h2>
+            <p id="overview-shop-name">Bharat Electronics</p>
+          </div>
+          <button class="btn btn-gold" onclick="switchTab('sales')">+ Record Sale</button>
+        </div>
+
+        <!-- Low stock alert -->
+        <div id="low-stock-banner" style="display:none;align-items:center;gap:12px;
+          background:rgba(224,85,85,0.08);border:1px solid rgba(224,85,85,0.2);
+          border-radius:var(--radius-md);padding:12px 16px;margin-bottom:20px;
+          font-size:13px;color:var(--color-danger)">
+          <span id="low-stock-text">Low stock warning</span>
+          <button onclick="switchTab('inventory')" style="margin-left:auto;background:none;
+            border:none;color:var(--color-danger);font-size:12px;cursor:pointer;text-decoration:underline">
+            View Inventory →
+          </button>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="kpi-grid">
+          <div class="kpi-card gold">
+            <div class="kpi-icon gold">💰</div>
+            <div class="kpi-label">Today's Revenue</div>
+            <div class="kpi-value" id="kpi-revenue">—</div>
+            <div class="kpi-change" id="kpi-revenue-change">loading…</div>
+          </div>
+          <div class="kpi-card green">
+            <div class="kpi-icon green">📈</div>
+            <div class="kpi-label">Today's Profit</div>
+            <div class="kpi-value" id="kpi-profit">—</div>
+            <div class="kpi-change" id="kpi-profit-change">loading…</div>
+          </div>
+          <div class="kpi-card blue">
+            <div class="kpi-icon blue">🛒</div>
+            <div class="kpi-label">Today's Orders</div>
+            <div class="kpi-value" id="kpi-orders">—</div>
+            <div class="kpi-change" id="kpi-orders-change">loading…</div>
+          </div>
+          <div class="kpi-card red">
+            <div class="kpi-icon red">📦</div>
+            <div class="kpi-label">Total Products</div>
+            <div class="kpi-value" id="kpi-inventory">—</div>
+            <div class="kpi-change flat" id="kpi-low-stock">— low stock items</div>
+          </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="charts-row">
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <div>
+                <div class="chart-card-title">Weekly Revenue & Profit</div>
+                <div class="chart-card-subtitle">Last 7 days</div>
+              </div>
+              <div class="chart-legend">
+                <div class="legend-item"><div class="legend-dot" style="background:var(--color-gold)"></div>Revenue</div>
+                <div class="legend-item"><div class="legend-dot" style="background:var(--color-success)"></div>Profit</div>
+              </div>
+            </div>
+            <div style="height:220px"><canvas id="revenue-chart"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <div>
+                <div class="chart-card-title">Sales by Category</div>
+                <div class="chart-card-subtitle">All time</div>
+              </div>
+            </div>
+            <div style="height:220px"><canvas id="category-chart"></canvas></div>
+          </div>
+        </div>
+
+        <!-- Recent Sales -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <div>
+              <div class="chart-card-title">Recent Sales</div>
+              <div class="chart-card-subtitle">Last 5 transactions</div>
+            </div>
+            <button class="btn btn-ghost" style="font-size:12px;padding:6px 14px"
+                    onclick="switchTab('sales')">View All →</button>
+          </div>
+          <div class="activity-list" id="recent-sales-list">
+            <div class="empty-state"><div class="empty-state-icon">⏳</div><div class="empty-state-text">Loading…</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════
+           TAB: INVENTORY
+           ══════════════════════════════════════ -->
+      <div class="tab-panel" id="tab-inventory">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h2>Inventory</h2>
+            <p>Manage your product stock</p>
+          </div>
+          <button class="btn btn-gold" id="add-product-btn">+ Add Product</button>
+        </div>
+        <div class="inventory-controls">
+          <div class="search-input-wrap">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" id="inventory-search" placeholder="Search products…" />
+          </div>
+          <div class="filter-tabs" id="category-filters"></div>
+        </div>
+        <div class="table-card">
+          <div class="table-header">
+            <div>
+              <div class="table-title">All Products</div>
+              <div class="table-count" id="inventory-count">— products</div>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Category</th>
+                  <th>Selling Price</th>
+                  <th>Cost Price</th>
+                  <th style="min-width:120px">Stock</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="inventory-tbody">
+                <tr><td colspan="7"><div class="empty-state"><div class="empty-state-icon">⏳</div><div class="empty-state-text">Loading inventory…</div></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="table-footer">
+            <div class="table-info" id="inventory-page-info"></div>
+            <div class="pagination" id="inventory-pagination"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════
+           TAB: SALES
+           ══════════════════════════════════════ -->
+      <div class="tab-panel" id="tab-sales">
+        <div class="page-header">
+          <div class="page-header-left"><h2>Sales</h2><p>Record and track daily sales</p></div>
+        </div>
+
+        <!-- Sale Form -->
+        <div class="sale-form-card">
+          <div class="sale-form-title">📝 Record New Sale</div>
+          <form id="sale-form">
+            <div class="sale-form-grid">
+              <div class="form-group" style="margin:0">
+                <label class="form-label">Product *</label>
+                <select class="form-select" id="sale-product" required>
+                  <option value="">— Select —</option>
+                </select>
+              </div>
+              <div class="form-group" style="margin:0">
+                <label class="form-label">Quantity *</label>
+                <input type="number" class="form-input" id="sale-qty" min="1" value="1" required />
+              </div>
+              <div class="form-group" style="margin:0">
+                <label class="form-label">Sale Price (₹) *</label>
+                <input type="number" class="form-input" id="sale-price" min="0" required />
+              </div>
+              <div style="display:flex;align-items:flex-end">
+                <button type="submit" class="btn btn-gold" style="width:100%">+ Add Sale</button>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:14px;margin-top:14px;align-items:end">
+              <div class="form-group" style="margin:0">
+                <label class="form-label">Customer</label>
+                <input type="text" class="form-input" id="sale-customer" placeholder="Walk-in" />
+              </div>
+              <div class="form-group" style="margin:0">
+                <label class="form-label">Payment</label>
+                <select class="form-select" id="sale-payment">
+                  <option>Cash</option><option>UPI</option><option>Card</option>
+                </select>
+              </div>
+              <div class="form-group" style="margin:0">
+                <label class="form-label">Date</label>
+                <input type="date" class="form-input" id="sale-date" />
+              </div>
+              <div style="padding-bottom:8px;text-align:right">
+                <div style="font-size:11px;color:var(--color-text-muted);margin-bottom:2px">Total</div>
+                <div style="font-size:20px;font-weight:600;color:var(--color-gold)" id="sale-total-preview">₹0</div>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Summary Strip -->
+        <div class="sale-summary-strip">
+          <div class="summary-card"><div class="summary-val" id="sales-day-revenue">₹0</div><div class="summary-lbl">Day Revenue</div></div>
+          <div class="summary-card"><div class="summary-val" id="sales-day-profit">₹0</div><div class="summary-lbl">Day Profit</div></div>
+          <div class="summary-card"><div class="summary-val" id="sales-day-orders">0</div><div class="summary-lbl">Orders</div></div>
+        </div>
+
+        <!-- Sales Table -->
+        <div class="table-card">
+          <div class="table-header">
+            <div>
+              <div class="table-title">Sales History</div>
+              <div class="table-count" id="sales-count">— transactions</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:12px;color:var(--color-text-muted)">Date:</span>
+              <input type="date" class="form-input" id="sales-date-filter"
+                     style="width:auto;padding:6px 10px;font-size:12px" />
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Product / Customer</th><th>Qty</th><th>Unit Price</th>
+                  <th>Total</th><th>Profit</th><th>Payment</th><th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="sales-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════
+           TAB: SETTINGS
+           ══════════════════════════════════════ -->
+      <div class="tab-panel" id="tab-settings">
+        <div class="page-header">
+          <div class="page-header-left"><h2>Settings</h2><p>Manage shop information</p></div>
+        </div>
+        <div class="settings-grid">
+          <div class="settings-card">
+            <div class="settings-card-title">🏪 Shop Information</div>
+            <div class="settings-card-sub">Appears on brand page and receipts.</div>
+            <div class="form-group"><label class="form-label">Shop Name</label><input type="text" class="form-input" id="set-shopname" /></div>
+            <div class="form-group"><label class="form-label">Tagline</label><input type="text" class="form-input" id="set-tagline" /></div>
+            <div class="form-group"><label class="form-label">Address</label><input type="text" class="form-input" id="set-address" /></div>
+            <div class="form-group"><label class="form-label">Phone</label><input type="text" class="form-input" id="set-phone" /></div>
+            <div class="form-group"><label class="form-label">WhatsApp</label><input type="text" class="form-input" id="set-whatsapp" /></div>
+            <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="set-email" /></div>
+            <div class="form-group"><label class="form-label">GST Number</label><input type="text" class="form-input" id="set-gst" /></div>
+            <div class="form-group"><label class="form-label">Low Stock Alert (units)</label><input type="number" class="form-input" id="set-low-stock" /></div>
+            <button class="btn btn-gold" id="save-shop-btn" style="width:100%">Save Shop Settings</button>
+          </div>
+          <div>
+            <div class="settings-card" style="margin-bottom:20px">
+              <div class="settings-card-title">👤 Owner Profile</div>
+              <div class="settings-card-sub">Shown on the brand page.</div>
+              <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input" id="set-owner-name" /></div>
+              <div class="form-group"><label class="form-label">Role</label><input type="text" class="form-input" id="set-owner-role" /></div>
+              <div class="form-group"><label class="form-label">Phone</label><input type="text" class="form-input" id="set-owner-phone" /></div>
+              <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="set-owner-email" /></div>
+              <div class="form-group"><label class="form-label">Initials (avatar)</label><input type="text" class="form-input" id="set-owner-initials" maxlength="2" /></div>
+              <div class="form-group"><label class="form-label">Bio</label><textarea class="form-textarea" id="set-owner-bio"></textarea></div>
+              <button class="btn btn-gold" id="save-owner-btn" style="width:100%">Save Profile</button>
+            </div>
+            <div class="settings-card">
+              <div class="settings-card-title">🔐 Change Password</div>
+              <div class="settings-card-sub">Update your admin login password.</div>
+              <div class="form-group"><label class="form-label">Current Password</label><input type="password" class="form-input" id="set-curr-pass" /></div>
+              <div class="form-group"><label class="form-label">New Password</label><input type="password" class="form-input" id="set-new-pass" /></div>
+              <button class="btn btn-outline" id="change-pass-btn" style="width:100%">Change Password</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end page-content -->
+  </div><!-- end main-content -->
+</div><!-- end dashboard-layout -->
+
+<!-- Add/Edit Product Modal -->
+<div class="modal-overlay" id="add-product-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">Add Product</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <form id="product-form">
+      <input type="hidden" id="modal-product-id" />
+      <div class="form-group">
+        <label class="form-label">Product Name *</label>
+        <input type="text" class="form-input" id="modal-name" required />
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div class="form-group"><label class="form-label">SKU *</label><input type="text" class="form-input" id="modal-sku" required /></div>
+        <div class="form-group"><label class="form-label">Emoji</label><input type="text" class="form-input" id="modal-emoji" placeholder="📦" maxlength="4" /></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Category *</label>
+        <select class="form-select" id="modal-category" required>
+          <option value="">— Select —</option>
+          <option>TV</option><option>AC</option><option>Fridge</option>
+          <option>Washing</option><option>Mobile</option><option>Appliances</option>
+          <option>Accessories</option><option>Other</option>
+        </select>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
+        <div class="form-group"><label class="form-label">Sell Price ₹ *</label><input type="number" class="form-input" id="modal-price" required min="0" /></div>
+        <div class="form-group"><label class="form-label">Cost Price ₹ *</label><input type="number" class="form-input" id="modal-cost" required min="0" /></div>
+        <div class="form-group"><label class="form-label">Stock *</label><input type="number" class="form-input" id="modal-stock" required min="0" /></div>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px">
+        <button type="button" class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+        <button type="submit" class="btn btn-gold">Save Product</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+
+<script src="js/config.js"></script>
+<script src="js/admin-api.js"></script>
+<script src="js/dashboard-api.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!--
+    index.html — Home Page
+    Loads featured products from API, shows hero offer banner,
+    repair service promo, trust indicators.
+    
+    To change which products are "featured": edit the
+    FEATURED_LIMIT constant in the script below, or change
+    the sort logic in renderFeatured().
+  -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bharat Electronics — Premium Electronics in Pukhrayan</title>
+  <meta name="description" content="Bharat Electronics — Your trusted electronics store in Pukhrayan, UP. TVs, ACs, fridges, mobiles and more." />
+
+  <link rel="stylesheet" href="css/common.css" />
+  <link rel="stylesheet" href="css/pages.css" />
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════
+     LOADER — BE morphs into Bharat Electronics
+     ══════════════════════════════════════════════════════ -->
+<div id="loader">
+  <div class="loader-stage">
+    <div class="loader-be" id="loaderBE">BE</div>
+    <div class="loader-full" id="loaderFull">Bharat <span class="accent">Electronics</span></div>
+  </div>
+  <div class="loader-progress-track" id="loaderProgressTrack">
+    <div class="loader-progress-fill" id="loaderProgressFill"></div>
+  </div>
+  <div class="loader-tag" id="loaderTag">PREMIUM · TRUSTED · GENUINE</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     TOP UTILITY STRIP
+     ══════════════════════════════════════════════════════ -->
+<div class="nav-top">
+  <div class="nav-top-left">
+    <span>📍 <span data-setting="address">Pukhrayan, Uttar Pradesh</span></span>
+    <span>🕐 Open · <span data-setting="open_time">10:00</span>–<span data-setting="close_time">20:00</span></span>
+  </div>
+  <div class="nav-top-right">
+    <a href="tel:" data-setting-href="phone">📞 <span data-setting="phone">+91 98765 43210</span></a>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     MAIN NAV
+     ══════════════════════════════════════════════════════ -->
+<nav class="nav-main">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-mark">B</div>
+    <div class="nav-text" data-setting="shop_name">Bharat Electronics</div>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html" class="nav-link active">Home</a></li>
+    <li><a href="shop.html" class="nav-link">Shop</a></li>
+    <li><a href="repair.html" class="nav-link">Repair</a></li>
+    <li><a href="about.html" class="nav-link">About</a></li>
+    <li><a href="contact.html" class="nav-link">Contact</a></li>
+  </ul>
+  <button class="nav-hamburger" id="navHamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════
+     SEARCH ROW
+     ══════════════════════════════════════════════════════ -->
+<div class="search-row">
+  <div class="search-box">
+    🔍 <input type="text" id="siteSearch" placeholder="Search for TV, AC, fridge, mobile and more...">
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     CATEGORY STRIP
+     Populated dynamically from inventory categories
+     ══════════════════════════════════════════════════════ -->
+<div class="cat-strip" id="categoryStrip">
+  <a href="shop.html" class="cat-chip active">All</a>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     HERO OFFER BANNER
+     Edit text directly here — not dynamic (manual promo)
+     ══════════════════════════════════════════════════════ -->
+<div class="hero-banner fade-in">
+  <div class="hero-left">
+    <div class="hero-tag">LIMITED TIME OFFER</div>
+    <div class="hero-h">Up to 15% off<br>on <span>Split ACs</span></div>
+    <p class="hero-p">Beat the heat with genuine, warrantied air conditioners. Installation included.</p>
+    <a href="shop.html?category=AC" class="btn btn-yellow">Shop AC deals →</a>
+  </div>
+  <div class="hero-right">❄️</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     FEATURED PRODUCTS
+     Loaded from API — best sellers (first 4 by default)
+     ══════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-head">
+    <div class="sec-title">Best sellers</div>
+    <a href="shop.html" class="sec-link" id="viewAllLink">View all →</a>
+  </div>
+  <div class="grid" id="featuredGrid">
+    <!-- Rendered by script below -->
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     TRUST STRIP
+     ══════════════════════════════════════════════════════ -->
+<div class="trust-strip">
+  <div class="trust-item">
+    <div class="trust-icon">🛡️</div>
+    <div><div class="trust-text">Genuine products</div><div class="trust-sub">100% warranty</div></div>
+  </div>
+  <div class="trust-item">
+    <div class="trust-icon">🚚</div>
+    <div><div class="trust-text">Free delivery</div><div class="trust-sub">Same day, local</div></div>
+  </div>
+  <div class="trust-item">
+    <div class="trust-icon">🔧</div>
+    <div><div class="trust-text">Repair service</div><div class="trust-sub">All major brands</div></div>
+  </div>
+  <div class="trust-item">
+    <div class="trust-icon">🏆</div>
+    <div><div class="trust-text">25+ years</div><div class="trust-sub">Trusted locally</div></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     REPAIR PROMO BANNER
+     ══════════════════════════════════════════════════════ -->
+<a href="repair.html" style="text-decoration:none;">
+  <div class="repair-banner fade-in" style="margin-top:28px;">
+    <div class="repair-left">
+      <div class="repair-icon">🔧</div>
+      <div>
+        <div class="repair-title">Need a repair?</div>
+        <div class="repair-sub">TV, AC, fridge & washing machine service available</div>
+      </div>
+    </div>
+    <div class="btn btn-outline btn-sm" style="background:#fff;">Book Repair →</div>
+  </div>
+</a>
+
+<!-- ══════════════════════════════════════════════════════
+     FOOTER
+     ══════════════════════════════════════════════════════ -->
+<footer class="site-footer">
+  <div data-setting="shop_name">Bharat Electronics</div>
+  <div class="footer-links">
+    <a href="shop.html">Shop</a>
+    <a href="repair.html">Repair</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</footer>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ── Scripts: order matters -->
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script src="js/loader.js"></script>
+<script src="js/main.js"></script>
+<script>
+  /* ── COMPONENT: Featured Products + Category Strip
+     Page-specific logic — loads inventory, picks featured
+     items, and builds the category chip list dynamically.
+     -------------------------------------------------------- */
+  const FEATURED_LIMIT = 4;
+  const CATEGORY_ICONS = {
+    TV: '📺', AC: '❄️', Fridge: '🧊', Washing: '🫧',
+    Mobile: '📱', Appliances: '🍹', Accessories: '🔌',
+  };
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    try {
+      const inventory = await API.inventory.getAll();
+      renderCategoryStrip(inventory);
+      renderFeatured(inventory);
+    } catch (err) {
+      console.error('Failed to load products:', err);
+      document.getElementById('featuredGrid').innerHTML =
+        `<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">Could not load products. Please refresh.</div></div>`;
+    }
+  });
+
+  function renderCategoryStrip(inventory) {
+    const strip = document.getElementById('categoryStrip');
+    const cats = [...new Set(inventory.map(p => p.category))];
+    strip.innerHTML = '<a href="shop.html" class="cat-chip active">All</a>' +
+      cats.map(c => `<a href="shop.html?category=${encodeURIComponent(c)}" class="cat-chip">${CATEGORY_ICONS[c] || '📦'} ${c}</a>`).join('');
+  }
+
+  function renderFeatured(inventory) {
+    const grid = document.getElementById('featuredGrid');
+    const viewAll = document.getElementById('viewAllLink');
+    viewAll.textContent = `View all ${inventory.length} →`;
+
+    /* Simple "featured" pick: highest price items first (premium feel) */
+    const featured = [...inventory]
+      .sort((a, b) => b.price - a.price)
+      .slice(0, FEATURED_LIMIT);
+
+    if (!featured.length) {
+      grid.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📦</div><div class="empty-state-text">No products yet.</div></div>`;
+      return;
+    }
+
+    grid.innerHTML = featured.map((p, i) => `
+      <div class="card fade-in d${i+1}" data-whatsapp-product="${p.name}">
+        <div class="card-img">${p.emoji || '📦'}</div>
+        <div class="card-body">
+          <div class="card-cat">${p.category}</div>
+          <div class="card-name">${p.name}</div>
+          <div class="card-price">₹${Number(p.price).toLocaleString('en-IN')}</div>
+          <div class="card-btn">View details</div>
+        </div>
+      </div>
+    `).join('');
+  }
+</script>
+
+</body>
+</html>

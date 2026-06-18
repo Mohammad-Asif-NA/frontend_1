@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!--
+    about.html — Owner Story + Shop Timeline
+    Owner profile loaded live from /api/public/owner.
+    Timeline years/text below are manual (edit directly here)
+    since they're historical facts, not data that changes often.
+  -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us — Bharat Electronics</title>
+  <link rel="stylesheet" href="css/common.css" />
+  <link rel="stylesheet" href="css/pages.css" />
+</head>
+<body>
+
+<div id="loader">
+  <div class="loader-stage">
+    <div class="loader-be" id="loaderBE">BE</div>
+    <div class="loader-full" id="loaderFull">Bharat <span class="accent">Electronics</span></div>
+  </div>
+  <div class="loader-progress-track" id="loaderProgressTrack">
+    <div class="loader-progress-fill" id="loaderProgressFill"></div>
+  </div>
+  <div class="loader-tag" id="loaderTag">PREMIUM · TRUSTED · GENUINE</div>
+</div>
+
+<div class="nav-top">
+  <div class="nav-top-left">
+    <span>📍 <span data-setting="address">Pukhrayan, Uttar Pradesh</span></span>
+    <span>🕐 Open · <span data-setting="open_time">10:00</span>–<span data-setting="close_time">20:00</span></span>
+  </div>
+  <div class="nav-top-right">
+    <a href="tel:" data-setting-href="phone">📞 <span data-setting="phone">+91 98765 43210</span></a>
+  </div>
+</div>
+
+<nav class="nav-main">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-mark">B</div>
+    <div class="nav-text" data-setting="shop_name">Bharat Electronics</div>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html" class="nav-link">Home</a></li>
+    <li><a href="shop.html" class="nav-link">Shop</a></li>
+    <li><a href="repair.html" class="nav-link">Repair</a></li>
+    <li><a href="about.html" class="nav-link active">About</a></li>
+    <li><a href="contact.html" class="nav-link">Contact</a></li>
+  </ul>
+  <button class="nav-hamburger" id="navHamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="page-head dark">
+  <div class="page-eyebrow">Our Story</div>
+  <div class="page-title">A legacy built on trust,<br>one family at a time.</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     OWNER PROFILE
+     Loaded live from /api/public/owner
+     ══════════════════════════════════════════════════════ -->
+<div class="profile fade-in">
+  <div class="profile-av" id="ownerInitials">BK</div>
+  <div>
+    <div class="profile-name" id="ownerName">Bharat Kumar</div>
+    <div class="profile-role" id="ownerRole">Owner &amp; Founder</div>
+    <p class="profile-bio" id="ownerBio">Loading…</p>
+    <div class="profile-contacts">
+      <div class="contact-row">📞 <span id="ownerPhone">—</span></div>
+      <div class="contact-row">📧 <span id="ownerEmail">—</span></div>
+      <div class="contact-row">📍 <span data-setting="address">Pukhrayan, Uttar Pradesh</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     TIMELINE
+     Edit years/text directly — these are fixed historical facts
+     ══════════════════════════════════════════════════════ -->
+<div class="timeline-sec">
+  <div class="timeline-inner">
+    <div class="tl-head">Our Journey</div>
+
+    <div class="tl-item fade-in d1">
+      <div class="tl-year">1995</div>
+      <div class="tl-content">
+        <div class="tl-title">The Beginning</div>
+        <div class="tl-desc">Started as a small electronics shop with a handful of products.</div>
+      </div>
+    </div>
+
+    <div class="tl-item fade-in d2">
+      <div class="tl-year">2010</div>
+      <div class="tl-content">
+        <div class="tl-title">Growing Strong</div>
+        <div class="tl-desc">Expanded to over 12 trusted brands across all major appliance categories.</div>
+      </div>
+    </div>
+
+    <div class="tl-item fade-in d3">
+      <div class="tl-year">Today</div>
+      <div class="tl-content">
+        <div class="tl-title">5000+ Happy Families</div>
+        <div class="tl-desc">Serving the community with genuine products and honest service.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="trust-strip">
+  <div class="trust-item"><div class="trust-icon">🛡️</div><div><div class="trust-text">Genuine</div><div class="trust-sub">100% warranty</div></div></div>
+  <div class="trust-item"><div class="trust-icon">🚚</div><div><div class="trust-text">Delivery</div><div class="trust-sub">Same day</div></div></div>
+  <div class="trust-item"><div class="trust-icon">💬</div><div><div class="trust-text">Support</div><div class="trust-sub">Quick replies</div></div></div>
+  <div class="trust-item"><div class="trust-icon">🔧</div><div><div class="trust-text">Service</div><div class="trust-sub">AMC &amp; repairs</div></div></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     MAP / DIRECTIONS
+     ⚠️ Update the Google Maps link below with your real shop location
+     ══════════════════════════════════════════════════════ -->
+<div class="section" style="text-align:center">
+  <div class="empty-state" style="background:var(--color-surface);border-radius:var(--radius-lg);padding:32px;max-width:500px;margin:0 auto 18px;">
+    <div style="font-size:32px;margin-bottom:8px;">📍</div>
+    <div style="font-size:13px;color:var(--color-text-sub);" data-setting="address">Pukhrayan, Uttar Pradesh</div>
+  </div>
+  <a href="https://maps.app.goo.gl/uUuvsM6i4Aq5WMPu9" target="_blank" class="btn btn-green">📍 Get Directions</a>
+</div>
+
+<footer class="site-footer">
+  <div data-setting="shop_name">Bharat Electronics</div>
+  <div class="footer-links">
+    <a href="shop.html">Shop</a>
+    <a href="repair.html">Repair</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</footer>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script src="js/loader.js"></script>
+<script src="js/main.js"></script>
+<script>
+  /* ── COMPONENT: Owner Profile Loader
+     Pulls live data from /api/public/owner so it stays in
+     sync with whatever the admin sets in the dashboard.
+     -------------------------------------------------------- */
+  document.addEventListener('DOMContentLoaded', async () => {
+    try {
+      const owner = await API.public.owner();
+      setText('ownerName',     owner.name);
+      setText('ownerRole',     owner.role);
+      setText('ownerBio',      owner.bio);
+      setText('ownerPhone',    owner.phone);
+      setText('ownerEmail',    owner.email);
+      setText('ownerInitials', owner.initials || 'BK');
+    } catch (err) {
+      console.error('Failed to load owner profile:', err);
+    }
+  });
+
+  function setText(id, val) {
+    const el = document.getElementById(id);
+    if (el && val) el.textContent = val;
+  }
+</script>
+
+</body>
+</html>

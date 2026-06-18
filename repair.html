@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!--
+    repair.html — Repair Service Booking
+    The booking form submits to /api/customers (same endpoint
+    as the contact form) with the message field formatted to
+    clearly mark it as a repair request — so it's easy to spot
+    in the admin dashboard's customer/enquiry list.
+  -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Repair Service — Bharat Electronics</title>
+  <link rel="stylesheet" href="css/common.css" />
+  <link rel="stylesheet" href="css/pages.css" />
+</head>
+<body>
+
+<div id="loader">
+  <div class="loader-stage">
+    <div class="loader-be" id="loaderBE">BE</div>
+    <div class="loader-full" id="loaderFull">Bharat <span class="accent">Electronics</span></div>
+  </div>
+  <div class="loader-progress-track" id="loaderProgressTrack">
+    <div class="loader-progress-fill" id="loaderProgressFill"></div>
+  </div>
+  <div class="loader-tag" id="loaderTag">PREMIUM · TRUSTED · GENUINE</div>
+</div>
+
+<div class="nav-top">
+  <div class="nav-top-left">
+    <span>📍 <span data-setting="address">Pukhrayan, Uttar Pradesh</span></span>
+    <span>🕐 Open · <span data-setting="open_time">10:00</span>–<span data-setting="close_time">20:00</span></span>
+  </div>
+  <div class="nav-top-right">
+    <a href="tel:" data-setting-href="phone">📞 <span data-setting="phone">+91 98765 43210</span></a>
+  </div>
+</div>
+
+<nav class="nav-main">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-mark">B</div>
+    <div class="nav-text" data-setting="shop_name">Bharat Electronics</div>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html" class="nav-link">Home</a></li>
+    <li><a href="shop.html" class="nav-link">Shop</a></li>
+    <li><a href="repair.html" class="nav-link active">Repair</a></li>
+    <li><a href="about.html" class="nav-link">About</a></li>
+    <li><a href="contact.html" class="nav-link">Contact</a></li>
+  </ul>
+  <button class="nav-hamburger" id="navHamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="search-row">
+  <div class="search-box">
+    🔍 <input type="text" id="siteSearch" placeholder="Search products...">
+  </div>
+</div>
+
+<div class="page-head dark">
+  <div class="page-eyebrow">🔧 Repair Service</div>
+  <div class="page-title">Expert repairs for<br>all major brands</div>
+  <div class="page-sub">25 years of trusted service. Quick diagnosis, fair pricing, genuine parts.</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SERVICE TYPE CARDS
+     Clicking one selects it for the form below
+     ══════════════════════════════════════════════════════ -->
+<div class="service-grid">
+  <div class="service-card" data-appliance="Television">
+    <div class="service-icon">📺</div>
+    <div class="service-name">TV Repair</div>
+    <div class="service-sub">All brands</div>
+  </div>
+  <div class="service-card" data-appliance="Air Conditioner">
+    <div class="service-icon">❄️</div>
+    <div class="service-name">AC Service</div>
+    <div class="service-sub">Gas refill & repair</div>
+  </div>
+  <div class="service-card" data-appliance="Refrigerator">
+    <div class="service-icon">🧊</div>
+    <div class="service-name">Fridge Repair</div>
+    <div class="service-sub">Cooling issues</div>
+  </div>
+  <div class="service-card" data-appliance="Washing Machine">
+    <div class="service-icon">🫧</div>
+    <div class="service-name">Washing Machine</div>
+    <div class="service-sub">Motor & drum</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     BOOKING FORM
+     Submits to /api/customers via API.customers.submit()
+     ══════════════════════════════════════════════════════ -->
+<div class="form-section">
+  <div class="container-sm">
+    <div class="form-card">
+      <div class="form-title">Book a repair visit</div>
+      <div class="form-sub">Fill the form, we'll call you to schedule a technician.</div>
+
+      <form id="repairForm">
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label" for="repairName">Your Name *</label>
+            <input class="field-input" id="repairName" required placeholder="Enter your name">
+          </div>
+          <div class="field">
+            <label class="field-label" for="repairPhone">Phone Number *</label>
+            <input class="field-input" id="repairPhone" required placeholder="Enter your phone">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="repairAppliance">Appliance Type *</label>
+          <select class="field-select" id="repairAppliance" required>
+            <option value="">Select appliance...</option>
+            <option>Television</option>
+            <option>Air Conditioner</option>
+            <option>Refrigerator</option>
+            <option>Washing Machine</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="repairIssue">Describe the Issue *</label>
+          <textarea class="field-textarea" id="repairIssue" required placeholder="What's wrong with your appliance?"></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn" id="repairSubmitBtn">Book Repair Visit →</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     HOW IT WORKS
+     ══════════════════════════════════════════════════════ -->
+<div class="section container-sm">
+  <div class="tl-head" style="margin-bottom:0">How it works</div>
+  <div class="process-row" style="margin-top:24px">
+    <div class="process-step">
+      <div class="process-num">1</div>
+      <div class="process-step-title">Book Online</div>
+      <div class="process-step-sub">Fill the form or call us directly</div>
+    </div>
+    <div class="process-step">
+      <div class="process-num">2</div>
+      <div class="process-step-title">Technician Visits</div>
+      <div class="process-step-sub">We diagnose at your home</div>
+    </div>
+    <div class="process-step">
+      <div class="process-num">3</div>
+      <div class="process-step-title">Fair Quote & Repair</div>
+      <div class="process-step-sub">Approve, then we fix it</div>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div data-setting="shop_name">Bharat Electronics</div>
+  <div class="footer-links">
+    <a href="shop.html">Shop</a>
+    <a href="repair.html">Repair</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</footer>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script src="js/loader.js"></script>
+<script src="js/main.js"></script>
+<script>
+  /* ── COMPONENT: Service Card Selection
+     Clicking a card highlights it and pre-fills the
+     appliance dropdown in the form below.
+     -------------------------------------------------------- */
+  document.querySelectorAll('.service-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.service-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      const applianceSelect = document.getElementById('repairAppliance');
+      applianceSelect.value = card.dataset.appliance;
+      document.getElementById('repairName').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  });
+
+  /* ── COMPONENT: Repair Booking Form Submit
+     Sends to /api/customers with a clearly-tagged message
+     so it shows up distinctly in the dashboard's enquiry list.
+     -------------------------------------------------------- */
+  document.getElementById('repairForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('repairSubmitBtn');
+    const name      = document.getElementById('repairName').value.trim();
+    const phone     = document.getElementById('repairPhone').value.trim();
+    const appliance = document.getElementById('repairAppliance').value;
+    const issue      = document.getElementById('repairIssue').value.trim();
+
+    const message = `[REPAIR REQUEST] Appliance: ${appliance}. Issue: ${issue}`;
+
+    btn.disabled = true;
+    btn.textContent = 'Submitting…';
+
+    try {
+      await API.customers.submit({ name, phone, email: '', message });
+      Toast.show('Repair request submitted! We will call you shortly.', 'success', 5000);
+      document.getElementById('repairForm').reset();
+      document.querySelectorAll('.service-card').forEach(c => c.classList.remove('selected'));
+    } catch (err) {
+      Toast.show(err.message || 'Failed to submit. Please try calling us directly.', 'error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Book Repair Visit →';
+    }
+  });
+</script>
+
+</body>
+</html>

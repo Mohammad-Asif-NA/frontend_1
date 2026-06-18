@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!--
+    login.html — Admin Login Page
+    Redirects to dashboard.html on successful login.
+    Already logged in? Redirects automatically.
+  -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login — Bharat Electronics</title>
+  <link rel="stylesheet" href="css/admin-common.css" />
+  <style>
+    /* ── Login Page Specific Styles ── */
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Cormorant+Garamond:wght@400;500&display=swap');
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: var(--color-bg);
+    }
+
+    /* Radial glow */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 40%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(201,168,76,0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .login-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: 44px 40px;
+      width: 100%;
+      max-width: 400px;
+      position: relative;
+      overflow: hidden;
+      animation: fadeUp 0.4s ease forwards;
+    }
+
+    /* Gold top bar */
+    .login-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+    }
+
+    .login-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .login-logo-mark {
+      width: 40px; height: 40px;
+      background: var(--color-gold);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: #0a0a0a;
+    }
+
+    .login-logo-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      color: var(--color-text-primary);
+      letter-spacing: 0.04em;
+    }
+
+    .login-logo-sub {
+      font-size: 11px;
+      color: var(--color-text-muted);
+      letter-spacing: 0.08em;
+    }
+
+    .login-title {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      margin-bottom: 6px;
+    }
+
+    .login-subtitle {
+      font-size: 13px;
+      color: var(--color-text-muted);
+      margin-bottom: 28px;
+    }
+
+    .error-box {
+      background: rgba(224,85,85,0.08);
+      border: 1px solid rgba(224,85,85,0.25);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--color-danger);
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      background: var(--color-gold);
+      color: #0a0a0a;
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 8px;
+      letter-spacing: 0.02em;
+    }
+
+    .login-btn:hover   { background: var(--color-gold-light); }
+    .login-btn:active  { transform: scale(0.98); }
+    .login-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      font-size: 12px;
+      color: var(--color-text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--color-gold); }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(16px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="login-card">
+
+  <!-- Logo -->
+  <div class="login-logo">
+    <div class="login-logo-mark">B</div>
+    <div>
+      <div class="login-logo-text">Bharat Electronics</div>
+      <div class="login-logo-sub">ADMIN PANEL</div>
+    </div>
+  </div>
+
+  <div class="login-title">Welcome back</div>
+  <div class="login-subtitle">Sign in to access the dashboard</div>
+
+  <!-- Error message box -->
+  <div class="error-box" id="error-box"></div>
+
+  <!-- Login Form -->
+  <div>
+    <div class="form-group">
+      <label class="form-label">Username</label>
+      <input type="text" class="form-input" id="username"
+             placeholder="admin" autocomplete="username" />
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input type="password" class="form-input" id="password"
+             placeholder="••••••••" autocomplete="current-password" />
+    </div>
+
+    <button class="login-btn" id="login-btn" onclick="handleLogin()">
+      Sign In →
+    </button>
+  </div>
+
+  <a href="../index.html" class="back-link">← Back to website</a>
+
+</div>
+
+<!-- Set your Railway backend URL here -->
+<script src="js/config.js"></script>
+<script src="js/admin-api.js"></script>
+<script>
+  /* Redirect if already logged in */
+  if (Auth.isLoggedIn()) {
+    window.location.href = 'dashboard.html';
+  }
+
+  /* Enter key submits form */
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') handleLogin();
+  });
+
+  async function handleLogin() {
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+    const btn      = document.getElementById('login-btn');
+    const errorBox = document.getElementById('error-box');
+
+    if (!username || !password) {
+      showError('Please enter username and password');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Signing in…';
+    errorBox.style.display = 'none';
+
+    try {
+      await API.auth.login(username, password);
+      window.location.href = 'dashboard.html';
+    } catch (err) {
+      showError(err.message || 'Login failed. Try again.');
+      btn.disabled = false;
+      btn.textContent = 'Sign In →';
+    }
+  }
+
+  function showError(msg) {
+    const box = document.getElementById('error-box');
+    box.textContent = msg;
+    box.style.display = 'block';
+  }
+</script>
+
+</body>
+</html>

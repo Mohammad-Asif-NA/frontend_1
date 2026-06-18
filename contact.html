@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!--
+    contact.html — Contact + Enquiry Form + Home Delivery Info
+    Form submits to /api/customers (general enquiry, not repair).
+  -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Us — Bharat Electronics</title>
+  <link rel="stylesheet" href="css/common.css" />
+  <link rel="stylesheet" href="css/pages.css" />
+</head>
+<body>
+
+<div id="loader">
+  <div class="loader-stage">
+    <div class="loader-be" id="loaderBE">BE</div>
+    <div class="loader-full" id="loaderFull">Bharat <span class="accent">Electronics</span></div>
+  </div>
+  <div class="loader-progress-track" id="loaderProgressTrack">
+    <div class="loader-progress-fill" id="loaderProgressFill"></div>
+  </div>
+  <div class="loader-tag" id="loaderTag">PREMIUM · TRUSTED · GENUINE</div>
+</div>
+
+<div class="nav-top">
+  <div class="nav-top-left">
+    <span>📍 <span data-setting="address">Pukhrayan, Uttar Pradesh</span></span>
+    <span>🕐 Open · <span data-setting="open_time">10:00</span>–<span data-setting="close_time">20:00</span></span>
+  </div>
+  <div class="nav-top-right">
+    <a href="tel:" data-setting-href="phone">📞 <span data-setting="phone">+91 98765 43210</span></a>
+  </div>
+</div>
+
+<nav class="nav-main">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-mark">B</div>
+    <div class="nav-text" data-setting="shop_name">Bharat Electronics</div>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html" class="nav-link">Home</a></li>
+    <li><a href="shop.html" class="nav-link">Shop</a></li>
+    <li><a href="repair.html" class="nav-link">Repair</a></li>
+    <li><a href="about.html" class="nav-link">About</a></li>
+    <li><a href="contact.html" class="nav-link active">Contact</a></li>
+  </ul>
+  <button class="nav-hamburger" id="navHamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="page-head">
+  <div class="page-eyebrow">Get In Touch</div>
+  <div class="page-title">We'd love to hear from you</div>
+  <div class="page-sub">Visit our store, call us, or send a message — we reply fast.</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     WHATSAPP BANNER
+     ══════════════════════════════════════════════════════ -->
+<div class="whatsapp-banner fade-in">
+  <div class="wb-left">
+    <div class="wb-icon">💬</div>
+    <div>
+      <div class="wb-title">Chat with us on WhatsApp</div>
+      <div class="wb-sub">Fastest way to get a quick reply</div>
+    </div>
+  </div>
+  <a href="#" data-setting-href="whatsapp" class="wb-btn">Open WhatsApp →</a>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     CONTACT CARDS + ENQUIRY FORM
+     ══════════════════════════════════════════════════════ -->
+<div class="contact-grid">
+  <div class="contact-cards">
+    <div class="cc-item">
+      <div class="cc-icon">📞</div>
+      <div><div class="cc-label">Phone</div><div class="cc-value" data-setting="phone">+91 98765 43210</div></div>
+    </div>
+    <div class="cc-item">
+      <div class="cc-icon">📧</div>
+      <div><div class="cc-label">Email</div><div class="cc-value" data-setting="email">bharatelectronics@gmail.com</div></div>
+    </div>
+    <div class="cc-item">
+      <div class="cc-icon">📍</div>
+      <div><div class="cc-label">Address</div><div class="cc-value" data-setting="address">Pukhrayan, Uttar Pradesh</div></div>
+    </div>
+    <div class="cc-item">
+      <div class="cc-icon">🕐</div>
+      <div><div class="cc-label">Hours</div><div class="cc-value"><span data-setting="open_time">10:00</span> – <span data-setting="close_time">20:00</span>, Mon–Sun</div></div>
+    </div>
+  </div>
+
+  <div class="form-card">
+    <div class="form-title">Send us a message</div>
+    <form id="contactForm">
+      <div class="field">
+        <label class="field-label" for="contactName">Your Name *</label>
+        <input class="field-input" id="contactName" required placeholder="Enter your name">
+      </div>
+      <div class="field">
+        <label class="field-label" for="contactPhone">Phone Number *</label>
+        <input class="field-input" id="contactPhone" required placeholder="Enter your phone">
+      </div>
+      <div class="field">
+        <label class="field-label" for="contactMessage">Message *</label>
+        <textarea class="field-textarea" id="contactMessage" required placeholder="What are you looking for?"></textarea>
+      </div>
+      <button type="submit" class="submit-btn" id="contactSubmitBtn">Send Message</button>
+    </form>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     HOME DELIVERY SERVICE INFO
+     ══════════════════════════════════════════════════════ -->
+<div class="delivery-section">
+  <div class="delivery-inner">
+    <div class="delivery-head">
+      <div class="delivery-title">🚚 Home Delivery Service</div>
+    </div>
+    <div class="delivery-grid">
+      <div class="delivery-card fade-in d1">
+        <div class="delivery-icon">⚡</div>
+        <div class="delivery-card-title">Same Day Delivery</div>
+        <div class="delivery-card-sub">For orders placed before 4 PM, within the local area</div>
+      </div>
+      <div class="delivery-card fade-in d2">
+        <div class="delivery-icon">🆓</div>
+        <div class="delivery-card-title">Free on ₹5,000+</div>
+        <div class="delivery-card-sub">No delivery charge above this order value</div>
+      </div>
+      <div class="delivery-card fade-in d3">
+        <div class="delivery-icon">🔧</div>
+        <div class="delivery-card-title">Free Installation</div>
+        <div class="delivery-card-sub">AC, washing machine &amp; fridge setup included</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     MAP BANNER
+     ⚠️ Update the Google Maps link with your real shop location
+     ══════════════════════════════════════════════════════ -->
+<div class="map-banner">
+  <div>
+    <div class="map-banner-title">📍 Visit our store</div>
+    <div class="map-banner-sub" data-setting="address">Pukhrayan, Uttar Pradesh</div>
+  </div>
+  <a href="https://maps.app.goo.gl/uUuvsM6i4Aq5WMPu9" target="_blank" class="btn btn-yellow btn-sm">Get Directions →</a>
+</div>
+
+<footer class="site-footer" style="margin-top:28px">
+  <div data-setting="shop_name">Bharat Electronics</div>
+  <div class="footer-links">
+    <a href="shop.html">Shop</a>
+    <a href="repair.html">Repair</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</footer>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script src="js/loader.js"></script>
+<script src="js/main.js"></script>
+<script>
+  /* ── COMPONENT: Contact Form Submit
+     Sends to /api/customers — shows up in the admin
+     dashboard's customer enquiry list (no [REPAIR REQUEST]
+     tag, so it's distinguishable from repair bookings).
+     -------------------------------------------------------- */
+  document.getElementById('contactForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('contactSubmitBtn');
+    const name    = document.getElementById('contactName').value.trim();
+    const phone   = document.getElementById('contactPhone').value.trim();
+    const message = document.getElementById('contactMessage').value.trim();
+
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+
+    try {
+      await API.customers.submit({ name, phone, email: '', message });
+      Toast.show('Message sent! We will get back to you soon.', 'success', 5000);
+      document.getElementById('contactForm').reset();
+    } catch (err) {
+      Toast.show(err.message || 'Failed to send. Please try calling us directly.', 'error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Send Message';
+    }
+  });
+</script>
+
+</body>
+</html>
