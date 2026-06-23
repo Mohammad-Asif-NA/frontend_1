@@ -86,14 +86,16 @@
 
 <!-- ══════════════════════════════════════════════════════
      HERO OFFER BANNER
-     Edit text directly here — not dynamic (manual promo)
+     Text loaded live from settings (hero_tag, hero_title,
+     hero_description, hero_category_link) — editable from
+     the admin dashboard's "Hero Banner" tab.
      ══════════════════════════════════════════════════════ -->
 <div class="hero-banner fade-in">
   <div class="hero-left">
-    <div class="hero-tag">LIMITED TIME OFFER</div>
-    <div class="hero-h">Up to 15% off<br>on <span>Split ACs</span></div>
-    <p class="hero-p">Beat the heat with genuine, warrantied air conditioners. Installation included.</p>
-    <a href="shop.html?category=AC" class="btn btn-yellow">Shop AC deals →</a>
+    <div class="hero-tag" id="heroTag">LIMITED TIME OFFER</div>
+    <div class="hero-h" id="heroTitle">Up to 15% off on Split ACs</div>
+    <p class="hero-p" id="heroDescription">Beat the heat with genuine, warrantied air conditioners. Installation included.</p>
+    <a href="shop.html?category=AC" class="btn btn-yellow" id="heroCta">Shop deals →</a>
   </div>
   <div class="hero-right">❄️</div>
 </div>
@@ -114,23 +116,14 @@
 
 <!-- ══════════════════════════════════════════════════════
      TRUST STRIP
+     Loaded live from /api/trust-items — editable from the
+     admin dashboard's "Trust Strip" tab.
      ══════════════════════════════════════════════════════ -->
-<div class="trust-strip">
+<div class="trust-strip" id="trustStrip">
+  <!-- Rendered by script below; this fallback shows briefly while loading -->
   <div class="trust-item">
     <div class="trust-icon">🛡️</div>
     <div><div class="trust-text">Genuine products</div><div class="trust-sub">100% warranty</div></div>
-  </div>
-  <div class="trust-item">
-    <div class="trust-icon">🚚</div>
-    <div><div class="trust-text">Free delivery</div><div class="trust-sub">Same day, local</div></div>
-  </div>
-  <div class="trust-item">
-    <div class="trust-icon">🔧</div>
-    <div><div class="trust-text">Repair service</div><div class="trust-sub">All major brands</div></div>
-  </div>
-  <div class="trust-item">
-    <div class="trust-icon">🏆</div>
-    <div><div class="trust-text">25+ years</div><div class="trust-sub">Trusted locally</div></div>
   </div>
 </div>
 
@@ -191,7 +184,55 @@
       document.getElementById('featuredGrid').innerHTML =
         `<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">Could not load products. Please refresh.</div></div>`;
     }
+
+    loadHeroBanner();
+    loadTrustStrip();
   });
+
+  /* ── COMPONENT: Hero Banner Loader
+     Pulls hero_tag/hero_title/hero_description/hero_category_link
+     from /api/public/settings — editable from the dashboard's
+     "Hero Banner" tab without touching code.
+     -------------------------------------------------------- */
+  async function loadHeroBanner() {
+    try {
+      const settings = await API.public.settings();
+      if (settings.hero_tag)         document.getElementById('heroTag').textContent = settings.hero_tag;
+      if (settings.hero_title)       document.getElementById('heroTitle').textContent = settings.hero_title;
+      if (settings.hero_description) document.getElementById('heroDescription').textContent = settings.hero_description;
+
+      const cta = document.getElementById('heroCta');
+      const category = settings.hero_category_link;
+      if (category) {
+        cta.href = `shop.html?category=${encodeURIComponent(category)}`;
+        cta.textContent = `Shop ${category} deals →`;
+      }
+    } catch (err) {
+      console.error('Failed to load hero banner:', err);
+      /* Page still works with the placeholder text already in HTML */
+    }
+  }
+
+  /* ── COMPONENT: Trust Strip Loader
+     Pulls items from /api/trust-items — editable (add/edit/
+     remove) from the dashboard's "Trust Strip" tab.
+     -------------------------------------------------------- */
+  async function loadTrustStrip() {
+    const strip = document.getElementById('trustStrip');
+    try {
+      const items = await API.content.trustItems();
+      if (!items.length) return; /* keep fallback markup */
+      strip.innerHTML = items.map(item => `
+        <div class="trust-item">
+          <div class="trust-icon">${item.icon || '🛡️'}</div>
+          <div><div class="trust-text">${item.title}</div><div class="trust-sub">${item.subtitle || ''}</div></div>
+        </div>
+      `).join('');
+    } catch (err) {
+      console.error('Failed to load trust strip:', err);
+      /* Fallback markup already in HTML stays visible */
+    }
+  }
 
   function renderCategoryStrip(inventory) {
     const strip = document.getElementById('categoryStrip');

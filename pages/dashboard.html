@@ -41,6 +41,19 @@
       <div class="sidebar-item" data-tab="sales">
         <span class="sidebar-icon">💰</span>Sales
       </div>
+      <div class="sidebar-section-label">Website Content</div>
+      <div class="sidebar-item" data-tab="hero-banner">
+        <span class="sidebar-icon">🎯</span>Hero Banner
+      </div>
+      <div class="sidebar-item" data-tab="repair-services">
+        <span class="sidebar-icon">🔧</span>Repair Services
+      </div>
+      <div class="sidebar-item" data-tab="delivery-info">
+        <span class="sidebar-icon">🚚</span>Delivery Info
+      </div>
+      <div class="sidebar-item" data-tab="trust-strip">
+        <span class="sidebar-icon">🏆</span>Trust Strip
+      </div>
       <div class="sidebar-section-label">Config</div>
       <div class="sidebar-item" data-tab="settings">
         <span class="sidebar-icon">⚙️</span>Settings
@@ -92,6 +105,10 @@
         <button class="tab-btn active" data-tab="overview">📊 Overview</button>
         <button class="tab-btn" data-tab="inventory">📦 Inventory</button>
         <button class="tab-btn" data-tab="sales">💰 Sales</button>
+        <button class="tab-btn" data-tab="hero-banner">🎯 Hero Banner</button>
+        <button class="tab-btn" data-tab="repair-services">🔧 Repair Services</button>
+        <button class="tab-btn" data-tab="delivery-info">🚚 Delivery Info</button>
+        <button class="tab-btn" data-tab="trust-strip">🏆 Trust Strip</button>
         <button class="tab-btn" data-tab="settings">⚙️ Settings</button>
       </div>
 
@@ -328,6 +345,106 @@
       </div>
 
       <!-- ══════════════════════════════════════
+           TAB: HERO BANNER
+           Single-row settings (uses the existing
+           settings table, hero_* keys)
+           ══════════════════════════════════════ -->
+      <div class="tab-panel" id="tab-hero-banner">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h2>Hero Banner</h2>
+            <p>Edit the offer banner customers see on your homepage</p>
+          </div>
+        </div>
+        <div class="settings-card" style="max-width:560px">
+          <div class="settings-card-title">🎯 Homepage Offer</div>
+          <div class="settings-card-sub">This is the dark banner shown right under the category chips on the homepage.</div>
+          <div class="form-group">
+            <label class="form-label">Tag (small text above title)</label>
+            <input type="text" class="form-input" id="hero-tag" placeholder="LIMITED TIME OFFER" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Title</label>
+            <input type="text" class="form-input" id="hero-title" placeholder="Up to 15% off on Split ACs" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea class="form-textarea" id="hero-description" placeholder="Beat the heat with genuine, warrantied air conditioners."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Button Links to Category</label>
+            <select class="form-select" id="hero-category-link">
+              <option value="">— Select —</option>
+              <option>TV</option><option>AC</option><option>Fridge</option>
+              <option>Washing</option><option>Mobile</option><option>Appliances</option>
+              <option>Accessories</option>
+            </select>
+          </div>
+          <button class="btn btn-green" id="save-hero-btn" style="width:100%">Save Banner</button>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════
+           TAB: REPAIR SERVICES
+           List with add/edit/delete — appliance_type
+           feeds the public repair.html booking dropdown
+           ══════════════════════════════════════ -->
+      <div class="tab-panel" id="tab-repair-services">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h2>Repair Services</h2>
+            <p>Service types shown on your Repair page</p>
+          </div>
+          <button class="btn btn-gold" id="add-repair-service-btn">+ Add Service</button>
+        </div>
+        <div class="table-card">
+          <div id="repair-services-list">
+            <div class="empty-state"><div class="empty-state-icon">⏳</div><div class="empty-state-text">Loading…</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════
+           TAB: DELIVERY INFO
+           List with add/edit/delete — shown on
+           the public Contact page
+           ══════════════════════════════════════ -->
+      <div class="tab-panel" id="tab-delivery-info">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h2>Delivery Info</h2>
+            <p>Cards shown in the "Home Delivery Service" section on your Contact page</p>
+          </div>
+          <button class="btn btn-gold" id="add-delivery-card-btn">+ Add Card</button>
+        </div>
+        <div class="table-card">
+          <div id="delivery-cards-list">
+            <div class="empty-state"><div class="empty-state-icon">⏳</div><div class="empty-state-text">Loading…</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════
+           TAB: TRUST STRIP
+           List with add/edit/delete — shown on
+           Home and About pages
+           ══════════════════════════════════════ -->
+      <div class="tab-panel" id="tab-trust-strip">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h2>Trust Strip</h2>
+            <p>The 4-box trust indicators shown on your Home and About pages</p>
+          </div>
+          <button class="btn btn-gold" id="add-trust-item-btn">+ Add Item</button>
+        </div>
+        <div class="table-card">
+          <div id="trust-items-list">
+            <div class="empty-state"><div class="empty-state-icon">⏳</div><div class="empty-state-text">Loading…</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════
            TAB: SETTINGS
            ══════════════════════════════════════ -->
       <div class="tab-panel" id="tab-settings">
@@ -414,11 +531,91 @@
   </div>
 </div>
 
+<!-- Add/Edit Repair Service Modal -->
+<div class="modal-overlay" id="repair-service-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="repair-service-modal-title">Add Service</div>
+      <button class="modal-close" onclick="closeRepairServiceModal()">✕</button>
+    </div>
+    <form id="repair-service-form">
+      <input type="hidden" id="rs-modal-id" />
+      <div style="display:grid;grid-template-columns:80px 1fr;gap:14px">
+        <div class="form-group"><label class="form-label">Icon</label><input type="text" class="form-input" id="rs-modal-icon" placeholder="🔧" maxlength="4" /></div>
+        <div class="form-group"><label class="form-label">Service Name *</label><input type="text" class="form-input" id="rs-modal-name" required placeholder="TV Repair" /></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <input type="text" class="form-input" id="rs-modal-description" placeholder="All brands" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Appliance Type * <span style="color:var(--color-text-muted);font-weight:400">(used in the booking form dropdown)</span></label>
+        <input type="text" class="form-input" id="rs-modal-appliance" required placeholder="Television" />
+      </div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px">
+        <button type="button" class="btn btn-ghost" onclick="closeRepairServiceModal()">Cancel</button>
+        <button type="submit" class="btn btn-gold">Save Service</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Add/Edit Delivery Card Modal -->
+<div class="modal-overlay" id="delivery-card-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="delivery-card-modal-title">Add Delivery Card</div>
+      <button class="modal-close" onclick="closeDeliveryCardModal()">✕</button>
+    </div>
+    <form id="delivery-card-form">
+      <input type="hidden" id="dc-modal-id" />
+      <div style="display:grid;grid-template-columns:80px 1fr;gap:14px">
+        <div class="form-group"><label class="form-label">Icon</label><input type="text" class="form-input" id="dc-modal-icon" placeholder="🚚" maxlength="4" /></div>
+        <div class="form-group"><label class="form-label">Title *</label><input type="text" class="form-input" id="dc-modal-title" required placeholder="Same Day Delivery" /></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <input type="text" class="form-input" id="dc-modal-description" placeholder="For orders placed before 4 PM" />
+      </div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px">
+        <button type="button" class="btn btn-ghost" onclick="closeDeliveryCardModal()">Cancel</button>
+        <button type="submit" class="btn btn-gold">Save Card</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Add/Edit Trust Item Modal -->
+<div class="modal-overlay" id="trust-item-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="trust-item-modal-title">Add Trust Item</div>
+      <button class="modal-close" onclick="closeTrustItemModal()">✕</button>
+    </div>
+    <form id="trust-item-form">
+      <input type="hidden" id="ti-modal-id" />
+      <div style="display:grid;grid-template-columns:80px 1fr;gap:14px">
+        <div class="form-group"><label class="form-label">Icon</label><input type="text" class="form-input" id="ti-modal-icon" placeholder="🛡️" maxlength="4" /></div>
+        <div class="form-group"><label class="form-label">Title *</label><input type="text" class="form-input" id="ti-modal-title" required placeholder="Genuine products" /></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Subtitle</label>
+        <input type="text" class="form-input" id="ti-modal-subtitle" placeholder="100% warranty" />
+      </div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px">
+        <button type="button" class="btn btn-ghost" onclick="closeTrustItemModal()">Cancel</button>
+        <button type="submit" class="btn btn-gold">Save Item</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <div class="toast-container" id="toast-container"></div>
 
 <script src="js/config.js"></script>
 <script src="js/admin-api.js"></script>
 <script src="js/dashboard-api.js"></script>
+<script src="js/content-management.js"></script>
 
 </body>
 </html>

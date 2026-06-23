@@ -60,4 +60,22 @@ const API = {
       });
     },
   },
+
+  /* ── Content management — admin-editable lists that show
+     up on public pages (repair services, delivery info,
+     trust strip). GET is public; ADD/UPDATE/DELETE are not
+     used here (those live in the admin dashboard's own
+     api.js) — this file only ever reads them.
+     -------------------------------------------------------- */
+  content: {
+    async repairServices() {
+      return apiFetch('/api/repair-services');
+    },
+    async deliveryCards() {
+      return apiFetch('/api/delivery-cards');
+    },
+    async trustItems() {
+      return apiFetch('/api/trust-items');
+    },
+  },
 };

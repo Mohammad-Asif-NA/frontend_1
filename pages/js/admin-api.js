@@ -169,4 +169,76 @@ const API = {
       });
     },
   },
+
+  /* ── COMPONENT: Repair Services CRUD --------------------
+     Powers the "Repair Services" tab — service cards shown
+     on the public repair.html page. -------------------- */
+  repairServices: {
+    async getAll() {
+      return apiFetch('/api/repair-services');
+    },
+    async add(data) {
+      return apiFetch('/api/repair-services', {
+        method: 'POST',
+        body: JSON.stringify(data),
+      });
+    },
+    async update(id, data) {
+      return apiFetch(`/api/repair-services/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(data),
+      });
+    },
+    async remove(id) {
+      return apiFetch(`/api/repair-services/${id}`, { method: 'DELETE' });
+    },
+  },
+
+  /* ── COMPONENT: Delivery Cards CRUD ---------------------
+     Powers the "Delivery Info" tab — cards shown on the
+     public contact.html page. ---------------------------- */
+  deliveryCards: {
+    async getAll() {
+      return apiFetch('/api/delivery-cards');
+    },
+    async add(data) {
+      return apiFetch('/api/delivery-cards', {
+        method: 'POST',
+        body: JSON.stringify(data),
+      });
+    },
+    async update(id, data) {
+      return apiFetch(`/api/delivery-cards/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(data),
+      });
+    },
+    async remove(id) {
+      return apiFetch(`/api/delivery-cards/${id}`, { method: 'DELETE' });
+    },
+  },
+
+  /* ── COMPONENT: Trust Items CRUD -------------------------
+     Powers the "Trust Strip" tab — items shown on the
+     public index.html and about.html pages. -------------- */
+  trustItems: {
+    async getAll() {
+      return apiFetch('/api/trust-items');
+    },
+    async add(data) {
+      return apiFetch('/api/trust-items', {
+        method: 'POST',
+        body: JSON.stringify(data),
+      });
+    },
+    async update(id, data) {
+      return apiFetch(`/api/trust-items/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(data),
+      });
+    },
+    async remove(id) {
+      return apiFetch(`/api/trust-items/${id}`, { method: 'DELETE' });
+    },
+  },
 };

@@ -101,7 +101,11 @@ const Shell = {
 
 /* Tab switcher — called globally from HTML onclick */
 function switchTab(tab) {
-  const TITLES = { overview:'Overview', inventory:'Inventory', sales:'Sales', settings:'Settings' };
+  const TITLES = {
+    overview:'Overview', inventory:'Inventory', sales:'Sales', settings:'Settings',
+    'hero-banner':'Hero Banner', 'repair-services':'Repair Services',
+    'delivery-info':'Delivery Info', 'trust-strip':'Trust Strip',
+  };
 
   document.querySelectorAll('.tab-btn').forEach(b =>
     b.classList.toggle('active', b.dataset.tab === tab));
@@ -114,6 +118,10 @@ function switchTab(tab) {
   if (titleEl) titleEl.textContent = TITLES[tab] || tab;
 
   if (tab === 'overview') loadOverview();
+  if (tab === 'hero-banner' && typeof loadHeroBannerTab === 'function') loadHeroBannerTab();
+  if (tab === 'repair-services' && typeof loadRepairServicesTab === 'function') loadRepairServicesTab();
+  if (tab === 'delivery-info' && typeof loadDeliveryCardsTab === 'function') loadDeliveryCardsTab();
+  if (tab === 'trust-strip' && typeof loadTrustItemsTab === 'function') loadTrustItemsTab();
 }
 
 /* Logout */

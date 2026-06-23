@@ -110,11 +110,11 @@
   </div>
 </div>
 
-<div class="trust-strip">
+<!-- Trust strip — loaded live from /api/trust-items, same
+     data source as the homepage. Editable from the dashboard's
+     "Trust Strip" tab. -->
+<div class="trust-strip" id="trustStrip">
   <div class="trust-item"><div class="trust-icon">🛡️</div><div><div class="trust-text">Genuine</div><div class="trust-sub">100% warranty</div></div></div>
-  <div class="trust-item"><div class="trust-icon">🚚</div><div><div class="trust-text">Delivery</div><div class="trust-sub">Same day</div></div></div>
-  <div class="trust-item"><div class="trust-icon">💬</div><div><div class="trust-text">Support</div><div class="trust-sub">Quick replies</div></div></div>
-  <div class="trust-item"><div class="trust-icon">🔧</div><div><div class="trust-text">Service</div><div class="trust-sub">AMC &amp; repairs</div></div></div>
 </div>
 
 <!-- ══════════════════════════════════════════════════════
@@ -162,11 +162,33 @@
     } catch (err) {
       console.error('Failed to load owner profile:', err);
     }
+
+    loadTrustStrip();
   });
 
   function setText(id, val) {
     const el = document.getElementById(id);
     if (el && val) el.textContent = val;
+  }
+
+  /* ── COMPONENT: Trust Strip Loader
+     Same data source as the homepage's trust strip —
+     editable from the dashboard's "Trust Strip" tab.
+     -------------------------------------------------------- */
+  async function loadTrustStrip() {
+    const strip = document.getElementById('trustStrip');
+    try {
+      const items = await API.content.trustItems();
+      if (!items.length) return;
+      strip.innerHTML = items.map(item => `
+        <div class="trust-item">
+          <div class="trust-icon">${item.icon || '🛡️'}</div>
+          <div><div class="trust-text">${item.title}</div><div class="trust-sub">${item.subtitle || ''}</div></div>
+        </div>
+      `).join('');
+    } catch (err) {
+      console.error('Failed to load trust strip:', err);
+    }
   }
 </script>
 

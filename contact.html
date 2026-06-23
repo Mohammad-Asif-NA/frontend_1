@@ -116,27 +116,18 @@
 
 <!-- ══════════════════════════════════════════════════════
      HOME DELIVERY SERVICE INFO
+     Loaded live from /api/delivery-cards — editable
+     (add/edit/remove) from the dashboard's "Delivery Info" tab.
      ══════════════════════════════════════════════════════ -->
 <div class="delivery-section">
   <div class="delivery-inner">
     <div class="delivery-head">
       <div class="delivery-title">🚚 Home Delivery Service</div>
     </div>
-    <div class="delivery-grid">
-      <div class="delivery-card fade-in d1">
-        <div class="delivery-icon">⚡</div>
-        <div class="delivery-card-title">Same Day Delivery</div>
-        <div class="delivery-card-sub">For orders placed before 4 PM, within the local area</div>
-      </div>
-      <div class="delivery-card fade-in d2">
-        <div class="delivery-icon">🆓</div>
-        <div class="delivery-card-title">Free on ₹5,000+</div>
-        <div class="delivery-card-sub">No delivery charge above this order value</div>
-      </div>
-      <div class="delivery-card fade-in d3">
-        <div class="delivery-icon">🔧</div>
-        <div class="delivery-card-title">Free Installation</div>
-        <div class="delivery-card-sub">AC, washing machine &amp; fridge setup included</div>
+    <div class="delivery-grid" id="deliveryGrid">
+      <div class="empty-state" style="grid-column:1/-1">
+        <div class="empty-state-icon">⏳</div>
+        <div class="empty-state-text">Loading…</div>
       </div>
     </div>
   </div>
@@ -171,6 +162,35 @@
 <script src="js/loader.js"></script>
 <script src="js/main.js"></script>
 <script>
+  /* ── COMPONENT: Delivery Cards Loader
+     Loads delivery info from /api/delivery-cards — editable
+     (add/edit/remove) from the dashboard's "Delivery Info" tab.
+     -------------------------------------------------------- */
+  document.addEventListener('DOMContentLoaded', loadDeliveryCards);
+
+  async function loadDeliveryCards() {
+    const grid = document.getElementById('deliveryGrid');
+    try {
+      const cards = await API.content.deliveryCards();
+
+      if (!cards.length) {
+        grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-state-icon">🚚</div><div class="empty-state-text">No delivery info yet.</div></div>`;
+        return;
+      }
+
+      grid.innerHTML = cards.map((c, i) => `
+        <div class="delivery-card fade-in d${(i % 6) + 1}">
+          <div class="delivery-icon">${c.icon || '🚚'}</div>
+          <div class="delivery-card-title">${c.title}</div>
+          <div class="delivery-card-sub">${c.description || ''}</div>
+        </div>
+      `).join('');
+    } catch (err) {
+      console.error('Failed to load delivery cards:', err);
+      grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">Could not load delivery info.</div></div>`;
+    }
+  }
+
   /* ── COMPONENT: Contact Form Submit
      Sends to /api/customers — shows up in the admin
      dashboard's customer enquiry list (no [REPAIR REQUEST]

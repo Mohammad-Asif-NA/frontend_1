@@ -68,28 +68,14 @@
 
 <!-- ══════════════════════════════════════════════════════
      SERVICE TYPE CARDS
-     Clicking one selects it for the form below
+     Loaded live from /api/repair-services — editable
+     (add/edit/remove) from the dashboard's "Repair Services"
+     tab. Clicking a card selects it for the form below.
      ══════════════════════════════════════════════════════ -->
-<div class="service-grid">
-  <div class="service-card" data-appliance="Television">
-    <div class="service-icon">📺</div>
-    <div class="service-name">TV Repair</div>
-    <div class="service-sub">All brands</div>
-  </div>
-  <div class="service-card" data-appliance="Air Conditioner">
-    <div class="service-icon">❄️</div>
-    <div class="service-name">AC Service</div>
-    <div class="service-sub">Gas refill & repair</div>
-  </div>
-  <div class="service-card" data-appliance="Refrigerator">
-    <div class="service-icon">🧊</div>
-    <div class="service-name">Fridge Repair</div>
-    <div class="service-sub">Cooling issues</div>
-  </div>
-  <div class="service-card" data-appliance="Washing Machine">
-    <div class="service-icon">🫧</div>
-    <div class="service-name">Washing Machine</div>
-    <div class="service-sub">Motor & drum</div>
+<div class="service-grid" id="serviceGrid">
+  <div class="empty-state" style="grid-column:1/-1">
+    <div class="empty-state-icon">⏳</div>
+    <div class="empty-state-text">Loading services…</div>
   </div>
 </div>
 
@@ -119,11 +105,7 @@
           <label class="field-label" for="repairAppliance">Appliance Type *</label>
           <select class="field-select" id="repairAppliance" required>
             <option value="">Select appliance...</option>
-            <option>Television</option>
-            <option>Air Conditioner</option>
-            <option>Refrigerator</option>
-            <option>Washing Machine</option>
-            <option>Other</option>
+            <option value="Other">Other</option>
           </select>
         </div>
 
@@ -179,19 +161,68 @@
 <script src="js/loader.js"></script>
 <script src="js/main.js"></script>
 <script>
+  /* ── COMPONENT: Repair Services Loader
+     Loads service cards from /api/repair-services and
+     populates both the visual cards AND the appliance
+     dropdown's options — so they always stay in sync with
+     whatever the admin has configured in the dashboard.
+     -------------------------------------------------------- */
+  document.addEventListener('DOMContentLoaded', loadRepairServices);
+
+  async function loadRepairServices() {
+    const grid = document.getElementById('serviceGrid');
+    const select = document.getElementById('repairAppliance');
+
+    try {
+      const services = await API.content.repairServices();
+
+      if (!services.length) {
+        grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-state-icon">🔧</div><div class="empty-state-text">No services listed yet.</div></div>`;
+        return;
+      }
+
+      /* Render the clickable cards */
+      grid.innerHTML = services.map(s => `
+        <div class="service-card" data-appliance="${s.appliance_type}">
+          <div class="service-icon">${s.icon || '🔧'}</div>
+          <div class="service-name">${s.name}</div>
+          <div class="service-sub">${s.description || ''}</div>
+        </div>
+      `).join('');
+
+      /* Insert matching dropdown options just before "Other" */
+      const otherOption = select.querySelector('option[value="Other"]');
+      services.forEach(s => {
+        /* Avoid duplicate options if the same appliance_type repeats */
+        if (select.querySelector(`option[value="${s.appliance_type}"]`)) return;
+        const opt = document.createElement('option');
+        opt.value = s.appliance_type;
+        opt.textContent = s.appliance_type;
+        select.insertBefore(opt, otherOption);
+      });
+
+      bindServiceCardClicks();
+    } catch (err) {
+      console.error('Failed to load repair services:', err);
+      grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">Could not load services. Please refresh.</div></div>`;
+    }
+  }
+
   /* ── COMPONENT: Service Card Selection
      Clicking a card highlights it and pre-fills the
      appliance dropdown in the form below.
      -------------------------------------------------------- */
-  document.querySelectorAll('.service-card').forEach(card => {
-    card.addEventListener('click', () => {
-      document.querySelectorAll('.service-card').forEach(c => c.classList.remove('selected'));
-      card.classList.add('selected');
-      const applianceSelect = document.getElementById('repairAppliance');
-      applianceSelect.value = card.dataset.appliance;
-      document.getElementById('repairName').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  function bindServiceCardClicks() {
+    document.querySelectorAll('.service-card').forEach(card => {
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.service-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        const applianceSelect = document.getElementById('repairAppliance');
+        applianceSelect.value = card.dataset.appliance;
+        document.getElementById('repairName').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
     });
-  });
+  }
 
   /* ── COMPONENT: Repair Booking Form Submit
      Sends to /api/customers with a clearly-tagged message
